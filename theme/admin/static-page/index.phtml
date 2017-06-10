@@ -1,0 +1,79 @@
+<?php $this->partial('shared/header'); ?>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    Total result: <?= number_format($total, 0, '.','.'); ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="page-header">
+                <?php if($this->can_i->create_static_page): ?>
+                <a class="btn btn-primary pull-right" href="<?= $this->router->to('adminStaticPageEdit', ['id'=>0], ['ref'=>$reff]) ?>">Create New</a>
+                <?php endif; ?>
+                <h3>Static Pages</h3>
+            </div>
+            
+            <?php if($pages): ?>
+            <?php
+                $can_delete     = $this->can_i->remove_static_page;
+                $can_edit       = $this->can_i->update_static_page;
+            ?>
+            
+            <div class="list-group">
+                <?php foreach($pages as $page): ?>
+                <div class="list-group-item">
+                    
+                    <div class="btn-group btn-group-xs pull-right" role="group">
+                        
+                        <?php if($can_edit): ?>
+                        <a href="<?= $this->router->to('adminStaticPageEdit', ['id'=>$page->id], ['ref'=>$reff]) ?>" class="btn btn-default" title="Edit">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </a>
+                        <?php endif; ?>
+                        
+                        <button id="page-<?= $page->id ?>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-xs">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="page-<?= $page->id ?>">
+                            <li>
+                                <a href="<?= $page->page ?>">
+                                    <i class="fa fa-external-link" aria-hidden="true"></i> View page
+                                </a>
+                            </li>
+                        <?php if($can_delete): ?>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href="<?= $this->router->to('adminStaticPageRemove', ['id'=>$page->id], ['ref'=>$reff]) ?>" data-confirm="Delete Confirmation" data-confirm-message="Are you sure want to delete this page? This action can't be undone." title="Delete" aria-label="Delete">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        </ul>
+                        
+                    </div>
+                    
+                    <h4 class="list-group-item-heading">
+                        <?= $page->title ?>
+                        <small><?= $page->slug ?></small>
+                    </h4>
+                    <p class="list-group-item-text small">
+                        <span title="Created"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> <?= date('M d, Y', strtotime($page->created)) ?></span>
+                    </p>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <?php
+                if($pagination)
+                    $this->partial('shared/pagination', ['pagination'=>$pagination]);
+            ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<?php $this->partial('shared/footer'); ?>
