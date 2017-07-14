@@ -60,6 +60,7 @@ class PageController extends \AdminController
             if(false === ($id = SPage::create($object)))
                 throw new \Exception(SPage::lastError());
         }else{
+            $object->updated = null;
             if(false === SPage::set($object, $id))
                 throw new \Exception(SPage::lastError());
         }
