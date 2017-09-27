@@ -16,7 +16,8 @@ return [
     ],
     '__dependencies' => [
         'static-page',
-        'admin'
+        'admin',
+        '/slug-history'
     ],
     '_services' => [],
     '_autoload' => [
@@ -45,12 +46,17 @@ return [
     
     'admin' => [
         'menu' => [
-            'static-page' => [
-                'label'     => 'Static Page',
+            'page' => [
+                'label'     => 'Page',
                 'order'     => 30,
                 'icon'      => 'file-text',
-                'perms'     => 'read_static_page',
-                'target'    => 'adminStaticPage'
+                'submenu'   => [
+                    'static-page' => [
+                        'label'     => 'Static Pages',
+                        'perms'     => 'read_static_page',
+                        'target'    => 'adminStaticPage',
+                    ]
+                ]
             ]
         ]
     ],

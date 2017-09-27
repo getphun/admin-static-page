@@ -13,9 +13,9 @@ class PageController extends \AdminController
 {
     private function _defaultParams(){
         return [
-            'title'             => 'Static Page',
-            'nav_title'         => 'Static Page',
-            'active_menu'       => 'static-page',
+            'title'             => 'Page',
+            'nav_title'         => 'Page',
+            'active_menu'       => 'page',
             'active_submenu'    => 'static-page',
             'total'             => 0,
             'pagination'        => []
@@ -42,7 +42,7 @@ class PageController extends \AdminController
             $object = SPage::get($id, false);
             if(!$object)
                 return $this->show404();
-            $old = $object;
+            $old = clone $object;
         }else{
             $object = new \stdClass();
             $object->user = $this->user->id;
@@ -63,6 +63,10 @@ class PageController extends \AdminController
             $object->updated = null;
             if(false === SPage::set($object, $id))
                 throw new \Exception(SPage::lastError());
+            
+            // save slug changes
+            if(isset($object->slug) && $object->slug != $old->slug && module_exists('slug-history'))
+                $this->slug->create('static-page', $id, $old->slug, $object->slug);
         }
         
         $this->fire('static-page:'. $event, $object, $old);
